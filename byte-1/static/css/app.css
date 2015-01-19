@@ -1,0 +1,56 @@
+ .news-date{
+                    font-weight: normal;
+                    color: #aeaeae;
+
+                }
+
+                .news-info{
+                    font-size: 11px;
+                }
+                .flickr-img {
+                    cursor: pointer;
+                    display: inline-block !important;
+                    margin-bottom: 4px;
+
+                }
+
+                .flickr-img:hover {
+                    opacity: 0.7;
+                }
+
+                .weather-high {
+
+                    color: #d58512;
+
+                }
+
+                .weather-low {
+                    color: #177199;
+
+                }
+
+                .temp {
+                    font-size: 90px;
+                    display: inline-block !important;
+                }
+
+                .temp-sup {
+                    font-size: 15px;
+                    display: inline-block !important;
+                }
+
+                .weather-desc {
+                    margin-left: -50px
+                }
+
+                .map-side{
+                    margin-top: 10px;
+                }
+
+                .b-container{
+                    margin-top: 80px;
+                }
+
+                .city-form{
+                    width: 400px!important;
+                }
