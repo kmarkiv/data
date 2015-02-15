@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/favicon.ico">
+
+    <title>Byte3 - Vikram Kamath</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/app.css" rel="stylesheet">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <!-- bxSlider Javascript file -->
+    <script src="/static/jquery.bxslider/jquery.bxslider.min.js"></script>
+    <!-- bxSlider CSS file -->
+    <link href="/static/jquery.bxslider/jquery.bxslider.css" rel="stylesheet"/>
+
+    <!-- Bootstrap core CSS -->
+
+</head>
+<style>
+    .stuff {
+        display: block;
+
+    }
+
+    #likelihood {
+        margin-top: 20px;
+        font-size: 45px;
+    }
+</style>
+<body ng-app="myApp" id="body">
+<nav class="navbar navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Byte 3</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="mailto:kmarkiv@gmail.com?subject=Byte2">Contact</a></li>
+            </ul>
+        </div>
+        <!-- /.nav-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<!-- /.navbar -->
+
+<div class="container b-container">
+
+    <ul class="bxslider">
+        <li>
+            <div class="row">
+                <div class="col-lg-6">
+                    <iframe width="550" height="400" scrolling="no" frameborder="no"
+                            src="https://www.google.com/fusiontables/embedviz?q=select+col16%2C+col17%2C+col15+from+1HLka9ST2CZW9EE8kQkrw8FACWEttqFEqrzYPkf3N+where+col13+%3D+&#39;Returned+to+Owner&#39;+and+col15+%3E%3D+1+and+col18+%3E%3D+1+limit+1000&amp;viz=HEATMAP&amp;h=true&amp;lat=38.18917137356792&amp;lng=-85.65117462158202&amp;t=1&amp;z=11&amp;l=col16&amp;y=5&amp;tmplt=7&amp;hmd=true&amp;hmg=%2366ff0000%2C%2393ff00ff%2C%23c1ff00ff%2C%23eeff00ff%2C%23f4e300ff%2C%23f4e300ff%2C%23f9c600ff%2C%23ffaa00ff%2C%23ff7100ff%2C%23ff3900ff%2C%23ff0000ff&amp;hmo=0.6&amp;hmr=50&amp;hmw=15&amp;hml=TWO_COL_LAT_LNG"></iframe>
+                </div>
+                <div class="col-lg-4">
+                    <h1>HeatMap
+                        <small></small>
+                    </h1>
+                    Distribution of animals that were eventually returned to the owners across the city.
+
+
+                </div>
+            </div>
+
+
+        </li>
+
+
+        <li>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="stuff" id="chart-months"></div>
+                </div>
+                <div class="col-lg-4">
+                    <h1>Month Found
+                        <small></small>
+                    </h1>
+                    Feb, March, April and May were peak months.
+
+
+                </div>
+            </div>
+
+
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="stuff" id="chart-animal"></div>
+                </div>
+                <div class="col-lg-4">
+                    <h1>Animal
+
+                    </h1>
+                    It is more likely to find a dog over a cat.
+
+
+                </div>
+            </div>
+
+
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="stuff" id="chart-color"></div>
+                </div>
+                <div class="col-lg-4">
+                    <h1>Color
+
+                    </h1>
+                    Black and brown animals were found the most.
+
+
+                </div>
+            </div>
+
+
+        </li>
+        <li>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="stuff" id="chart-sex"></div>
+                </div>
+                <div class="col-lg-4">
+                    <h1>Gender
+                        <small></small>
+                    </h1>
+                    Males are more likely to be found.
+
+
+                </div>
+            </div>
+
+
+        </li>
+
+        <li>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="stuff" id="chart-estimated_age"></div>
+                </div>
+                <div class="col-lg-4">
+                    <h1>Estimated Age
+                        <small></small>
+                    </h1>
+                    Interesting to note that the mots of the animals were Euthanized rather than rescued.
+
+
+                </div>
+            </div>
+
+
+        </li>
+
+
+        <li>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="stuff" id="chart-days"></div>
+                </div>
+                <div class="col-lg-4">
+                    <h1>Days to return
+                        <small></small>
+                    </h1>
+                    The likely hood of animals being returned reduces over time.
+
+
+                </div>
+            </div>
+
+
+        </li>
+
+
+    </ul>
+
+    <div class="col-lg-10">
+        <div class="row">
+            <div class="col-lg-8">
+                <form class="form-horizontal">
+
+
+                    <div class="col-sm-10">
+                        <h3 class="form-signin-heading">Animal Attributes</h3>
+                        {% for key,values in data.items() %}
+                            <div class="form-group">
+                                <label for="i-{{ key }}" class="col-sm-2 control-label">{{ key }}</label>
+
+                                <div class="col-sm-10">
+                                    <select class="form-control like-select" id="select-{{ key }}">
+                                        {% for key1,value1 in values.items() %}
+
+                                            <option value="{{ value1 }}">{{ key1 }}</option>
+
+
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="col-lg-4">
+                <h1>Likelihood
+                    <small></small>
+                </h1>
+                Play with the options to notice the change in likelihood. A black male dog found in March has the
+                highest likelihood of being returned to the owner.
+
+                <div id="likelihood">
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        var slider = $('.bxslider').bxSlider({});
+        // set keyboard listener
+        $(document).keydown(function (e) {
+            if (e.keyCode == 39) // Right arrow
+            {
+                slider.goToNextSlide();
+                return false;
+            }
+            else if (e.keyCode == 37) // left arrow
+            {
+                slider.goToPrevSlide();
+                return false;
+            }
+        });
+        var json = jQuery.parseJSON('{{ response | safe}}');
+        var graphs = ["days", "months", "animal", "color", "sex", "estimated_age"];
+        var pie = ["animal", "sex", "color"];
+        var horizontal = ["months"];
+        var area = ["days"];
+
+        var stuff = [];
+        var total = [];
+        for (var key in json) {
+            stuff[key] = [[key, "Number"]];
+            total[key] = 0;
+            for (var item in json[key]) {
+                stuff[key].push([item, parseInt(json[key][item])]);
+                total[key] += parseInt(json[key][item]);
+            }
+
+        }
+
+        $('select').on('change', function () {
+            cal_likelihood();
+        });
+        google.load("visualization", "1", {packages: ["corechart"]});
+
+        //console.log(key);
+        google.setOnLoadCallback(function () {
+            for (var key in graphs) {
+                drawChart(graphs[key])
+            }
+        });
+
+        function drawChart(row) {
+
+
+            var data = google.visualization.arrayToDataTable(
+                    stuff[row]
+            );
+
+            var view = new google.visualization.DataView(data);
+            view.setColumns([0, 1,
+                {
+                    calc: "stringify",
+                    sourceColumn: 1,
+                    type: "string",
+                    role: "annotation"
+                }]);
+
+            var options = {
+                title: "Animals found by " + row,
+                width: 550,
+                height: 400,
+                bar: {groupWidth: "95%"},
+                legend: {position: "top"}
+            };
+
+
+            var chart;
+            if (pie.indexOf(row) > -1)
+                chart = new google.visualization.PieChart(document.getElementById("chart-" + row));
+            else {
+                if (area.indexOf(row) > -1)
+                    chart = new google.visualization.AreaChart(document.getElementById("chart-" + row));
+                else
+                    chart = new google.visualization.BarChart(document.getElementById("chart-" + row));
+            }
+            chart.draw(view, options);
+        }
+
+        function cal_likelihood() {
+            // console.log("Like changed");
+            var prop = 0.1;
+            for (var key in graphs) {
+                prop *= $("#select-" + graphs[key]).val() / total[graphs[key]];
+                //console.log("total-"+);
+
+            }
+            var val = (prop * 1000000).toFixed(2);
+
+            // console.log(val);
+            $("#likelihood").html("" + val);
+            //    $("#likelihood2").html(" " + val)
+
+        }
+
+    </script>
+</body>
+</html>

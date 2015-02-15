@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" data-ng-app>
+<head>
+    <meta charset="utf-8">
+    <title>My HTML File</title>
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/app.css" rel="stylesheet">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+</head>
+<body>
+<form class="form-horizontal">
+
+
+    <div class="col-sm-10">
+        {% for key,values in data.items() %}
+            <div class="form-group">
+                <label for="i-{{ key }}" class="col-sm-2 control-label">{{ key }}</label>
+
+                <div class="col-sm-10">
+                    <select class="form-control like-select" id="select-{{ key }}">
+                        {% for key1,value1 in values.items() %}
+
+                            <option value="{{ value1 }}">{{ key1 }}</option>
+
+
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <div class="form-group">
+        <div id="likelihood">
+
+        </div>
+    </div>
+</form>
+<style>
+    .stuff {
+        display: block;
+        margin-top: 100px;
+
+    }
+</style>
+
+<div class="stuff" id="chart-days"></div>
+<div class="stuff" id="chart-months"></div>
+<div class="stuff" id="chart-animal"></div>
+<div class="stuff" id="chart-color"></div>
+<div class="stuff" id="chart-sex"></div>
+<div class="stuff" id="chart-estimated_age"></div>
+<script type="text/javascript">
+    var json = jQuery.parseJSON('{{ response | safe}}');
+    var graphs = ["days", "months", "animal", "color", "sex", "estimated_age"];
+    var pie = ["animal", "sex", "color"];
+    var horizontal = ["months"];
+    var area = ["days"];
+
+    var stuff = [];
+    var total = [];
+    for (var key in json) {
+        stuff[key] = [[key, "Number"]];
+        total[key] = 0;
+        for (var item in json[key]) {
+            stuff[key].push([item, parseInt(json[key][item])]);
+            total[key]+=  parseInt(json[key][item]);
+        }
+
+    }
+
+    $('select').on('change', function () {
+        cal_likelihood();
+    });
+
+    google.load("visualization", "1", {packages: ["corechart"]});
+
+    //console.log(key);
+    google.setOnLoadCallback(function () {
+        for (var key in graphs) {
+            drawChart(graphs[key])
+        }
+    });
+
+    function cal_likelihood()
+    {
+       // console.log("Like changed");
+        var prop = 0.1;
+        for (var key in graphs) {
+            prop*=  $( "#select-"+graphs[key]).val()/total[graphs[key]];
+            //console.log("total-"+);
+
+          }
+        var val = (prop*1000000).toFixed(2);;
+
+         console.log(val);
+         $( "#likelihood").html(""+val)
+
+    }
+
+    function drawChart(row) {
+
+
+
+
+        var data = google.visualization.arrayToDataTable(
+                stuff[row]
+        );
+
+        var view = new google.visualization.DataView(data);
+        view.setColumns([0, 1,
+            {
+                calc: "stringify",
+                sourceColumn: 1,
+                type: "string",
+                role: "annotation"
+            }]);
+
+        var options = {
+            title: "Animals found by " + row,
+            width: 550,
+            height: 400,
+            bar: {groupWidth: "95%"},
+            legend: {position: "none"}
+        };
+
+
+        var chart;
+        if (pie.indexOf(row) > -1)
+            chart = new google.visualization.PieChart(document.getElementById("chart-" + row));
+        else {
+            if (area.indexOf(row) > -1)
+                chart = new google.visualization.AreaChart(document.getElementById("chart-" + row));
+            else
+                chart = new google.visualization.BarChart(document.getElementById("chart-" + row));
+        }
+        chart.draw(view, options);
+    }
+</script>
+
+
+{{ response }}
+<p>Nothing here {{ 'yet' + '!' }}</p>
+
+</body>
+</html>
