@@ -9,3 +9,7 @@ Byte 2
 
 Byte 3
 [http://kmarkiv-byte3.appspot.com/](http://kmarkiv-byte3.appspot.com/)
+
+Byte 4
+[http://kmarkiv.com/cmu/mcdonalds.html](http://kmarkiv.com/cmu/mcdonalds.html)
+
