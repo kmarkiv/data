@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-ng-app>
+<head>
+  <meta charset="utf-8">
+  <title>My HTML File</title>
+  <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+  <script src="/static/js/angular.min.js"></script>
+</head>
+<body>
+<script src="http://www.d3plus.org/js/d3.js"></script>
+<script src="http://www.d3plus.org/js/d3plus.js"></script>
+
+<div id="viz"></div>
+
+<script>
+
+  var data = [
+    {"value": 90, "name": "X"},
+    {"value": 70, "name": "O"},
+    {"value": 40, "name": "draw"}
+  ]
+
+  d3plus.viz()
+    .container("#viz")
+    .data(data)
+    .type("pie")
+    .id("name")
+    .size("value")
+    .draw()
+
+</script>
+  <p>Nothing here {{'yet' + '!'}}</p>
+
+</body>
+</html>

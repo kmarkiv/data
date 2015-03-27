@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>DataPipleine Project 1 - Tic Tic Toe</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/sb-admin/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/sb-admin/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/sb-admin/css/sb-admin-2.css" rel="stylesheet">
+    <link href="/static/sb-admin/css/timeline.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/static/sb-admin/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .graphs{
+        height:300px;
+        }
+
+        .tic-box{
+        width:130px!important;
+        height:130px;
+        position:relative;
+        }
+
+        .hov-box:hover{
+        background-color: #00ff00;
+        cursor:pointer;
+        }
+
+        .tic-table{
+        text-align:center;
+        }
+
+        .pi{
+
+        }
+
+        .right-border{
+        border-right: 2px solid black;
+        }
+
+        .bottom-border{
+        border-bottom: 2px solid black;
+        }
+
+        .move-stats{
+        position: absolute; bottom 0!important;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">Ferry</a>
+        </div>
+        <!-- /.navbar-header -->
+
+
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation" style="position:fixed">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="tables.html"><i class="fa fa-table fa-fw"></i> Game</a>
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts</a>
+
+                        <!-- /.nav-second-level -->
+                    </li>
+
+                    <li>
+                        <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    </li>
+
+
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Story</a>
+
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-question-circle fa-fw"></i> Questions</a>
+
+                        <!-- /.nav-second-level -->
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-user fa-fw"></i> Team</a>
+
+                        <!-- /.nav-second-level -->
+                    </li>
+
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Tic Tac Toe</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Game</h3>
+
+
+                        <div class="row show-grid">
+                            <div class="col-md-6">
+
+                                <table class="tic-table ">
+                                    <tbody>
+                                    <tr>
+
+                                        <td id="p1" class="tic-box hov-box  p1 right-border bottom-border">
+
+                                            <div id="p1-move"></div>
+                                            <div id="p1-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+                                        </td>
+                                        <td id="p2" class="tic-box hov-box p2 right-border bottom-border">
+                                            <div id="p2-move"></div>
+                                            <div id="p2-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+
+                                        </td>
+                                        <td id="p3" class="tic-box hov-box p3 bottom-border">
+                                            <div id="p3-move"></div>
+                                            <div id="p3-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td id="p4" class="tic-box hov-box p4 right-border bottom-border">
+                                            <div id="p4-move"></div>
+                                            <div id="p4-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+                                        </td>
+                                        <td id="p5" class="tic-box hov-box p5 right-border bottom-border">
+                                            <div id="p5-move"></div>
+                                            <div id="p5-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+                                        </td>
+                                        <td id="p6" class="tic-box hov-box p6 bottom-border">
+                                            <div id="p6-move"></div>
+                                            <div id="p6-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td id="p7" class="tic-box hov-box p7 right-border">
+                                            <div id="p7-move"></div>
+                                            <div id="p7-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+                                        </td>
+                                        <td id="p8" class="tic-box hov-box p8 right-border">
+                                            <div id="p8-move"></div>
+                                            <div id="p8-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+                                            </div>
+                                        </td>
+                                        <td id="p9" class="tic-box hov-box p9">
+                                            <div id="p9-move"></div>
+                                            <div id="p9-stats" class="row show-grid move-stats">
+                                                <div class="n_per col-md-2">s</div>
+                                                <div class="c_per col-md-2">s</div>
+                                                <div class="d_per col-md-2">s</div>
+                                                <div class="pplay col-md-2">s</div>
+                                                <div class="win col-md-2">s</div>
+                                                <div class="loss col-md-2">s</div>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div id="pos"></div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div id="viz" class="graphs"></div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Odds</h3>
+
+
+                        <div class="row show-grid">
+                            <div class="col-md-6">
+
+                                <div id="viz2" class="graphs"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="viz3" class="graphs"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3 id="grid-responsive-resets">Story</h3>
+
+
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <ul class="timeline" id="timeline">
+                                <li>
+                                    <div class="timeline-badge"><i class="fa fa-check"></i>
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="timeline-title">Start Game</h4>
+
+
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>The game is skewed two.</p>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+
+
+                        <!-- /.panel-body -->
+
+                    </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3 id="grid-offsetting">Questions</h3>
+
+                            <div>
+
+                                <p> Develop experience with narrative construction in the context of data visualization.
+                                    <br/>
+                                    Your final product will be judged based on the clarity of the narrative it
+                                    represents.</p>
+
+                                <p>Develop experience with selecting data that can effectively tell the story you wish
+                                    to
+                                    tell.
+                                    <br/>Your final product will be judged based on the strength and appropriateness of
+                                    the
+                                    data you select. You may want to show dynamic information (such as showing the user
+                                    information about themselves collected from twitter or facebook.com; or data from
+                                    yahoo
+                                    pipes). Alternatively, you may want to use static data such as the many interesting
+                                    sets
+                                    on Google Fusion Tables. Here are some additional sources of interesting static data
+                                    sets that could be uploaded to Google Fusion Tables.
+                                    Health Data from the Health Data Initiative and Medicare charging data from CMS.gov
+                                    Weather Data from Weather Underground
+                                    A variety of data from data.gov as well as city level data from city-data.com
+                                    The Machine Learning Repository
+                                </p>
+
+                                <p>
+                                    Develop experience with using visualization techniques to both support a narrative
+                                    and
+                                    accurately represent the data.<br/> Your final product will be judged based on the
+                                    strength,
+                                    appropriateness, and truthfulness of the visualizations you select. You may use your
+                                    choice of visualization tools (Google Charts is also ok). Regardless of what tool
+                                    you
+                                    use, you may also want to explore the blog infosthetics.com for creative ideas for
+                                    your
+                                    visualization. The specific data and visualization type you choose will depend on
+                                    the
+                                    data set and the story you are trying to tell. </p>
+
+                                <p>Develop experience with visually documenting your data.<br/> Your final product will
+                                    be judged
+                                    based on the care and clarity with which you document your sources and approach.</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3 id="grid-nesting">Team</h3>
+
+                            <div class="row show-grid">
+                                <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                                <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                                <div class="col-xs-6 col-md-4">.col-xs-6 .col-md-4</div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row" id="x-timeline-tmpl">
+                <li>
+                    <div class="timeline-badge success"><i class="fa fa-close fa-lg"></i>
+                    </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">
+                                <span class="time-move">X</span>
+                                played
+                                <span class="time-pos">P1</span>
+                            </h4>
+
+
+                        </div>
+                        <div class="timeline-body">
+                            <p>The best possible move is to play
+
+                                <span class="time-suggest">P3</span>
+                                is suggested by
+                                <span class="time-algo">Bayes</span>
+                                .</p>
+                        </div>
+                    </div>
+                </li>
+            </div>
+
+            <div class="row" id="o-timeline-tmpl">
+                <li class="timeline-inverted">
+                    <div class="timeline-badge danger"><i class="fa fa-circle-o fa-lg"></i>
+                    </div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title">
+                                <span class="time-move">O</span>
+                                played
+                                <span class="time-pos">P1</span>
+                            </h4>
+
+
+                        </div>
+                        <div class="timeline-body">
+                            <p>The best possible move is to play
+
+                                <span class="time-suggest">P3</span>
+                                is suggested by
+                                <span class="time-algo">Bayes</span>
+                                .</p>
+                        </div>
+                    </div>
+                </li>
+            </div>
+            <!-- /.row -->
+
+
+            <!-- /.row -->
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/static/sb-admin/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/sb-admin/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/sb-admin/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/sb-admin/js/sb-admin-2.js"></script>
+    <script src="http://www.d3plus.org/js/d3.js"></script>
+    <script src="http://www.d3plus.org/js/d3plus.js"></script>
+    <script>
+
+ var WINS  = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]];
+
+var PIE_DATA =  [
+
+  ];
+var MOVE_NO =0;
+  var LINE_DATA =[
+
+  ];
+
+   var BAR_DATA = [
+
+  ];
+
+var pie;
+
+function draw_pie(){
+
+    data = PIE_DATA;
+
+  pie = d3plus.viz()
+    .container("#viz")
+    .data(data)
+    .type("pie")
+    .id("name")
+    .size("value")
+    .draw()
+     .color(function(d){
+      return get_color(d.name);
+    })
+}
+
+function draw_line(){
+// sample data array
+
+
+  // instantiate d3plus
+  var visualization = d3plus.viz()
+    .container("#viz2")  // container DIV to hold the visualization
+    .data(LINE_DATA)  // data to use with the visualization
+    .type("line")       // visualization type
+    .id("name")         // key for which our data is unique on
+    .text("name")       // key to use for display text
+    .y("value")         // key to use for y-axis
+    .x("move")          // key to use for x-axis
+    .draw()             // finally, draw the visualization!
+     .color(function(d){
+      return get_color(d.name);
+    })
+}
+
+function draw_bar(){
+
+
+  var visualization = d3plus.viz()
+    .container("#viz3")
+    .data(BAR_DATA)
+    .type("bar")
+    .id("name")
+    .x("move")
+    .y("value")
+    .draw()
+    .color(function(d){
+      return get_color(d.name);
+    })
+
+}
+
+function get_color(name)
+{
+switch (name) {
+    case "X":
+        return "#5cb85c";
+        break;
+    case "O":
+        return "#d9534f";
+        break;
+    case "Draw":
+        return "#f0ad4e";
+        break;
+
+    default:
+        return "#337ab7";
+        break;
+}
+
+}
+
+function add_otimeline(data)
+{
+$("#timeline").append($("#o-timeline-tmpl").html());
+}
+
+function add_xtimeline(data)
+{
+$("#timeline").append($("#x-timeline-tmpl").html());
+}
+
+function get_api(){
+ $.getJSON('/api/pos?pos='+POS, function(data) {
+    PIE_DATA =  [
+    {"value": data.data.cwin, "name": "X"},
+    {"value": data.data.nwin, "name": "O"},
+    {"value": data.data.dr, "name": "Draw"}
+  ];
+
+  console.log(data);
+
+  LINE_DATA.push({"move": MOVE_NO, "name":"X", "value": data.data.cwin});
+  LINE_DATA.push({"move": MOVE_NO, "name":"O", "value": data.data.nwin});
+  LINE_DATA.push({"move": MOVE_NO, "name":"Draw", "value": data.data.dr});
+
+    BAR_DATA.push({"move": MOVE_NO, "name":"All", "value": data.data.c});
+    BAR_DATA.push({"move": MOVE_NO, "name":"X", "value": data.data.c*data.data.cwin*0.01});
+    BAR_DATA.push({"move": MOVE_NO, "name":"O", "value": data.data.c*data.data.nwin*0.01});
+    BAR_DATA.push({"move": MOVE_NO, "name":"Draw", "value": data.data.c*data.data.dr*0.01});
+    //console.log("#p"+data.heat[key]["pos"]+"-stats .n_per");
+    for (var key in data.heat) {
+
+     $("#p"+data.heat[key]["pos"]+"-stats .n_per").html(Math.round(data.heat[key]["data"]["nwin"]));
+      $("#p"+data.heat[key]["pos"]+"-stats .c_per").html(Math.round(data.heat[key]["data"]["cwin"]));
+      $("#p"+data.heat[key]["pos"]+"-stats .d_per").html(Math.round(data.heat[key]["data"]["dr"]));
+    $("#p"+data.heat[key]["pos"]+"-stats .win").html(data.heat[key]["win"]);
+    $("#p"+data.heat[key]["pos"]+"-stats .loss").html(data.heat[key]["loss"]);
+     $("#p"+data.heat[key]["pos"]+"-stats .pplay").html(Math.round(data.heat[key]["score"]));
+    }
+
+
+
+
+   draw_pie();
+   draw_line();
+   draw_bar();
+   if(MOVE_NO>0)
+   if(MOVE=="O")
+    add_xtimeline(data);
+    else
+    add_otimeline(data);
+        });
+}
+
+function get_symbol(name)
+{
+switch (name) {
+    case "X":
+        return "X";
+        break;
+    case "O":
+        return "O";
+        break;
+    default:
+        return ".";
+        break;
+}
+}
+
+function board_position()
+{
+
+POS = "";
+for(i=1;i<10;i++)
+{
+POS+= get_symbol($("#p"+i+"-move").text());
+}
+$("#pos").html(POS);
+}
+
+function get_win()
+{
+    if (this.s(this.w[i][0]) === this.s(this.w[i][1])
+          && this.s(this.w[i][0]) === this.s(this.w[i][2])
+          && this.s(this.w[i][0]) != this.EMPTY) {
+          return this.s(this.w[i][0]);
+    }
+
+}
+
+
+var MOVE  = "O";
+var POS;
+$( document ).ready(function() {
+get_api();
+    console.log( "ready!" );
+    $( ".hov-box" ).click(function() {
+   $("#"+$(this).attr("id")+"-move").html(MOVE);
+   MOVE_NO+=1;
+   $(this).removeClass("hov-box");
+   MOVE = (MOVE =="O")?"X":"O";
+   console.log(MOVE);
+   console.log();
+   board_position();
+
+   get_api();
+});
+});
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
+
