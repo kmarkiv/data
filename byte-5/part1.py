@@ -1,20 +1,13 @@
 __author__ = 'vikram'
 __author__ = 'vikram'
-import httplib2
-from StringIO import StringIO
-from apiclient.discovery import build
-import urllib
 import json
-import csv
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
-from sklearn.naive_bayes import GaussianNB
-from sklearn import tree
-from sklearn import cross_validation
-from sklearn import preprocessing
-from sklearn import metrics
-from sklearn.dummy import DummyClassifier
+
+from apiclient.discovery import build
+
 
 # This API key is provided by google as described in the tutorial
 API_KEY = "AIzaSyCfRmwMKY8NVG1YSP_bJzA44orhsZOtjmY"

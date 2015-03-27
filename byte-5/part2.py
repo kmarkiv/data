@@ -1,11 +1,8 @@
-import httplib2
-from StringIO import StringIO
-from apiclient.discovery import build
-import urllib
 import json
 import csv
-import matplotlib.pyplot as plt
+
 import numpy as np
+
 import scipy.stats
 from sklearn.naive_bayes import GaussianNB
 from sklearn import tree
@@ -13,6 +10,9 @@ from sklearn import cross_validation
 from sklearn import preprocessing
 from sklearn import metrics
 from sklearn.dummy import DummyClassifier
+
+from apiclient.discovery import build
+
 
 # This API key is provided by google as described in the tutorial
 API_KEY = "AIzaSyCfRmwMKY8NVG1YSP_bJzA44orhsZOtjmY"
@@ -36,8 +36,6 @@ except IOError:
     cats = service.query().sql(sql=query).execute()
     fp = open("data/cats1.json", "w+")
     json.dump(cats, fp)
-
-
 
 #================================================================
 # Machine Learning
@@ -132,21 +130,9 @@ y[y == u'Euthanized'] = "Euthanized"
 # So for now we have 5 classes total: Other, Foster, Owner, Adopted, Euthanized
 Outcomes = ["Euth.", "Home", "Other"]
 
-# We'll use the first 20%. This is fine
-# to do because we know the data is randomized.
-nrows = len(all_data)
-percent = len(X) / 5
-X_opt = X[:percent, :]
-y_opt = y[:percent]
-
-# and a train/test set
-X_rest = X[percent:, :]
-y_rest = y[percent:]
-
 # ======================================================
 # print out files for orange if you want to use that
 # ======================================================
-
 
 
 # ======================================================
@@ -156,7 +142,7 @@ y_rest = y[percent:]
 # and we need to convert all the data from strings to numeric values
 le = preprocessing.LabelEncoder()
 labels = []
-le
+
 # collect all the labels. The csv files we are loading 
 # were generated back in byte 2 and are provided as part
 # of this source code. They just contain all possible
@@ -194,11 +180,14 @@ gnb = GaussianNB()
 dt = tree.DecisionTreeClassifier(max_depth=5)
 # you could try other classifiers here
 
+models = [dc, gnb, dt]
 # make a set of folds
 skf = cross_validation.StratifiedKFold(y_opt, 10)
+
 gnb_acc_scores = []
 dc_acc_scores = []
 dt_acc_scores = []
+
 # loop through the folds
 for train, test in skf:
     # extract the train and test sets
