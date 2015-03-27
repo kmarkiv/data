@@ -5,7 +5,7 @@ Tree
 ![alt tag](https://raw.githubusercontent.com/kmarkiv/data/master/byte-5/tree.png)
 
 =============================================
-Results of optimization  NB
+Results of optimization
 =============================================
 Dummy Mean accuracy:  0.413880946257
 
