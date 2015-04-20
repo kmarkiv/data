@@ -2,7 +2,6 @@ from optparse import OptionParser
 from cStringIO import StringIO
 
 from iniparse import INIConfig
-
 from flask import Flask, g, render_template
 import MySQLdb
 import MySQLdb.cursors
@@ -82,9 +81,8 @@ def hello_world():
     service = build('fusiontables', 'v1', developerKey=API_KEY)
     query = "SELECT wiki_key,title,start,end,country,continent FROM " + TABLE_ID + " "
     response = service.query().sql(sql=query).execute()
-    #print response
-    return render_template('home.html',list =response['rows'])
-
+    # print response
+    return render_template('home.html', list=response['rows'])
 
 
 @app.route('/searchs', methods=["GET"])
@@ -109,24 +107,29 @@ def hello_search_stuff():
     START = 1400
     END = 1700
     CONTINENT = "Europe"
-    query = "SELECT COUNT(*) as counts,country FROM pantheon WHERE birthyear>'%s' AND birthyear<'%s' AND continent='%s' GROUP BY country ORDER BY counts DESC LIMIT 40"%(START,END,CONTINENT)
+    query = "SELECT COUNT(*) as counts,country FROM pantheon WHERE birthyear>'%s' AND birthyear<'%s' AND continent='%s' GROUP BY country ORDER BY counts DESC LIMIT 40" % (
+    START, END, CONTINENT)
 
     conn = get_db()
     country = get_mysql_data(conn, query)
 
-    query = "SELECT COUNT(*) as counts,gender FROM pantheon WHERE birthyear>'%s' AND birthyear<%s AND continent='%s' GROUP BY gender ORDER BY counts DESC LIMIT 40"%(START,END,CONTINENT)
+    query = "SELECT COUNT(*) as counts,gender FROM pantheon WHERE birthyear>'%s' AND birthyear<%s AND continent='%s' GROUP BY gender ORDER BY counts DESC LIMIT 40" % (
+    START, END, CONTINENT)
     conn = get_db()
     gender = get_mysql_data(conn, query)
 
-    query = "SELECT COUNT(*) as counts,domain FROM pantheon WHERE birthyear>%s AND birthyear<%s AND continent='%s' GROUP BY domain ORDER BY counts DESC LIMIT 40"%(START,END,CONTINENT)
+    query = "SELECT COUNT(*) as counts,domain FROM pantheon WHERE birthyear>%s AND birthyear<%s AND continent='%s' GROUP BY domain ORDER BY counts DESC LIMIT 40" % (
+    START, END, CONTINENT)
     conn = get_db()
     domain = get_mysql_data(conn, query)
 
-    query = "SELECT COUNT(*) as counts,occupation FROM pantheon WHERE birthyear>'%s' AND birthyear<%s AND continent='%s' GROUP BY occupation ORDER BY counts DESC LIMIT 40"%(START,END,CONTINENT)
+    query = "SELECT COUNT(*) as counts,occupation FROM pantheon WHERE birthyear>'%s' AND birthyear<%s AND continent='%s' GROUP BY occupation ORDER BY counts DESC LIMIT 40" % (
+    START, END, CONTINENT)
     conn = get_db()
     occupation = get_mysql_data(conn, query)
 
-    return render_template('home.html', domain=domain, gender=gender, country=country,occupation=occupation)
+    return render_template('home.html', domain=domain, gender=gender, country=country, occupation=occupation)
+
 
 if __name__ == '__main__':
     app.run(debug=DEBUG)
