@@ -132,7 +132,7 @@ def hello_search_stuff():
 
 
 if __name__ == '__main__':
-    app.run(debug=DEBUG)
+    app.run(debug=DEBUG,host="0.0.0.0")
 """" \
 146	Persian_Empire	Persian Empires	-550	651
 
