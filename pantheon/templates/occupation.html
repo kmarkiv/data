@@ -16,7 +16,6 @@
     <link href="/static/chosen_v1.4.2/chosen.min.css" rel="stylesheet">
 
 
-
 </head>
 
 <body ng-app="myApp" id="body">
@@ -108,13 +107,10 @@
             {% if domain is defined %}
 
 
-            <h2>{{era.title}}
-                <small><strong>{{era.country}}</strong> ({{era.start}} - {{era.end}})</small>
+            <h2>{{era}}
+
             </h2>
 
-            <p><strong></strong>
-
-                {{era.abstract}}</p>
             <table class="table table-striped table-condensed">
                 <thead>
                 <tr>
@@ -194,6 +190,29 @@
                 </tbody>
             </table>
 
+            <table class="table table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th>Person</th>
+                    <th>Country</th>
+                     <th>Born</th>
+                    <th>COUNT</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for log in people %}
+                <tr>
+                    <td>{{ log.name }}</td>
+                    <td>{{ log.country }}</td>
+                     <td>{{ log.birthyear }}</td>
+                    <td>{{ log.hpi }}</td>
+
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
 
         </div>
         <div class="col-xs-6 col-md-4">
@@ -220,8 +239,6 @@
 <!--/.container-->
 
 
-
-
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -233,6 +250,7 @@
 $( document ).ready(function() {
         $(".chosen-select").chosen({width: "95%"});
 });
+
 
 
 </script>
