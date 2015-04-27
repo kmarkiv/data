@@ -1,8 +1,9 @@
+import json
 from optparse import OptionParser
 from cStringIO import StringIO
 
 from iniparse import INIConfig
-from flask import Flask, g, render_template, request
+from flask import Flask, g, render_template, request, jsonify
 import MySQLdb
 import MySQLdb.cursors
 
@@ -76,10 +77,27 @@ def get_mysql_data(sql):
     data = cur.fetchall()
     return data
 
+@app.route('/timeline')
+def timeline():
+    return render_template('timeline.html')
+
+@app.route('/api/timeline_r')
+def api_timeline():
+    return render_template("test.json")
+
+
+@app.route('/api/timeline')
+def api_timeline_test():
+    query = "SELECT start as ends,title as description,title,CAST(start as CHAR) as start,CAST(end as CHAR) as end, true as 'durationEvent' FROM wiki_era WHERE start>990 ORDER BY ends ASC LIMIT 200 "
+    events = get_mysql_data(query)
+    events[0]['start'] = events[0]['start']+" AD"
+    data = {'dateTimeFormat': 'iso8601', 'wikiURL': 'iso8601', 'wikiSection': 'iso8601', 'events': events}
+
+    return jsonify(data)
 
 @app.route('/')
 def hello_world():
-    query = "SELECT id,wiki_key,title,start,end,country,continent FROM wiki_era"
+    query = "SELECT *,'durationEvent' as 'true' FROM wiki_era"
     data = get_mysql_data(query)  # print response
 
     query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
