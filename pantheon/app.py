@@ -90,12 +90,22 @@ def admin():
 
 @app.route('/team')
 def admin_team():
-    return render_template('team.html')
+    query = "SELECT *,'durationEvent' as 'true' FROM wiki_era"
+    data = get_mysql_data(query)  # print response
+
+    query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
+    occupations = get_mysql_data(query)
+    return render_template('team.html', list=data, occupations=occupations)
 
 
 @app.route('/ml')
 def admin_ml():
-    return render_template('ml.html')
+    query = "SELECT *,'durationEvent' as 'true' FROM wiki_era"
+    data = get_mysql_data(query)  # print response
+
+    query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
+    occupations = get_mysql_data(query)
+    return render_template('ml.html', list=data, occupations=occupations)
 
 
 @app.route('/occ')
