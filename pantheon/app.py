@@ -1,8 +1,8 @@
-import json
 from optparse import OptionParser
 from cStringIO import StringIO
 
 from iniparse import INIConfig
+
 from flask import Flask, g, render_template, request, jsonify
 import MySQLdb
 import MySQLdb.cursors
@@ -77,25 +77,31 @@ def get_mysql_data(sql):
     data = cur.fetchall()
     return data
 
+
 @app.route('/timeline')
 def timeline():
     return render_template('timeline.html')
+
 
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
 
+
 @app.route('/team')
 def admin_team():
     return render_template('team.html')
+
 
 @app.route('/ml')
 def admin_ml():
     return render_template('ml.html')
 
+
 @app.route('/occ')
 def admin_occ():
     return render_template('occ.html')
+
 
 @app.route('/api/timeline_r')
 def api_timeline():
@@ -106,10 +112,11 @@ def api_timeline():
 def api_timeline_test():
     query = "SELECT start as ends,title as description,title,CAST(start as CHAR) as start,CAST(end as CHAR) as end, true as 'durationEvent' FROM wiki_era WHERE start>990 ORDER BY ends ASC LIMIT 200 "
     events = get_mysql_data(query)
-    events[0]['start'] = events[0]['start']+" AD"
+    events[0]['start'] = events[0]['start'] + " AD"
     data = {'dateTimeFormat': 'iso8601', 'wikiURL': 'iso8601', 'wikiSection': 'iso8601', 'events': events}
 
     return jsonify(data)
+
 
 @app.route('/')
 def hello_world():
@@ -119,7 +126,7 @@ def hello_world():
     query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
     occupations = get_mysql_data(query)
 
-    return render_template('home.html', list=data, occupations=occupations)
+    return render_template('index.html', list=data, occupations=occupations)
 
 
 @app.route('/searchs', methods=["GET"])
@@ -147,19 +154,24 @@ def search_era_stuff(START, END, CONTINENT, COUNTRY='%'):
 
     gender = get_mysql_data(query)
 
-    query = "SELECT COUNT(*) as counts,domain FROM pantheon WHERE birthyear>%s AND birthyear<%s AND continent='%s' AND country='%s' GROUP BY domain ORDER BY counts DESC LIMIT 40" % (
-        START, END, CONTINENT, COUNTRY)
-
+    query = "SELECT *,SUM(hpi_percent) FROM hpi_occupation WHERE year>='%s' AND year<='%s' AND country='all' ORDER BY year ASC" % (START, END)
     domain = get_mysql_data(query)
 
     query = "SELECT COUNT(*) as counts,occupation FROM pantheon WHERE birthyear>'%s' AND birthyear<%s AND continent='%s' AND country='%s' GROUP BY occupation ORDER BY counts DESC LIMIT 40" % (
         START, END, CONTINENT, COUNTRY)
     occupation = get_mysql_data(query)
-    return country, gender, domain, occupation
+
+    query = "SELECT * FROM pantheon WHERE birthyear>'%s' AND birthyear<'%s' AND  continent='%s' AND country='%s' ORDER BY HPI DESC" % (
+        START, END, CONTINENT, COUNTRY)
+
+    people = get_mysql_data(query)
+
+    return country, gender, domain, occupation, people
 
 
 def process_hpi(data):
     return []
+
 
 def search_occupation_stuff(OCCUPATION):
     query = "SELECT COUNT(*) as counts,country FROM pantheon WHERE occupation='%s' GROUP BY country ORDER BY counts DESC LIMIT 40" % (
@@ -202,7 +214,7 @@ def search_era():
 
     era = country
 
-    country, gender, domain, occupation = search_era_stuff(start, end, continent, place)
+    country, gender, domain, occupation, people = search_era_stuff(start, end, continent, place)
 
     query = "SELECT id,wiki_key,title,start,end,country,continent FROM wiki_era"
     data = get_mysql_data(query)  # print response
@@ -210,15 +222,15 @@ def search_era():
     query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
     occupations = get_mysql_data(query)
 
-    return render_template('home.html', era=era, domain=domain, gender=gender, country=country,
-                           occupation=occupation, list=data, occupations=occupations)
+    return render_template('era.html', era=era, domain=domain, gender=gender, country=country,
+                           occupation=occupation, list=data, occupations=occupations, people=people)
 
 
 @app.route('/occupation', methods=["POST"])
 def search_occupation():
     era = request.form.get("occupation", 1)
 
-    country, gender, domain,people = search_occupation_stuff(era)
+    country, gender, domain, people = search_occupation_stuff(era)
 
     query = "SELECT id,wiki_key,title,start,end,country,continent FROM wiki_era"
     data = get_mysql_data(query)  # print response
@@ -226,7 +238,7 @@ def search_occupation():
     query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
     occupations = get_mysql_data(query)
 
-    return render_template('occ.html', header=era, domain=domain, gender=gender, country=country,people=people,
+    return render_template('occ.html', header=era, domain=domain, gender=gender, country=country, people=people,
                            list=data, occupations=occupations)
 
 
