@@ -81,6 +81,22 @@ def get_mysql_data(sql):
 def timeline():
     return render_template('timeline.html')
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+@app.route('/team')
+def admin_team():
+    return render_template('team.html')
+
+@app.route('/ml')
+def admin_ml():
+    return render_template('ml.html')
+
+@app.route('/occ')
+def admin_occ():
+    return render_template('occ.html')
+
 @app.route('/api/timeline_r')
 def api_timeline():
     return render_template("test.json")
@@ -142,23 +158,25 @@ def search_era_stuff(START, END, CONTINENT, COUNTRY='%'):
     return country, gender, domain, occupation
 
 
+def process_hpi(data):
+    return []
+
 def search_occupation_stuff(OCCUPATION):
     query = "SELECT COUNT(*) as counts,country FROM pantheon WHERE occupation='%s' GROUP BY country ORDER BY counts DESC LIMIT 40" % (
         OCCUPATION)
 
     country = get_mysql_data(query)
 
-    query = "SELECT COUNT(*) as counts,gender FROM pantheon WHERE occupation='%s' GROUP BY gender ORDER BY counts DESC LIMIT 40" % (
+    query = "SELECT COUNT(*) as counts,gender,avg(HPI) as avg_hpi FROM pantheon WHERE occupation='%s' GROUP BY gender ORDER BY counts DESC LIMIT 40" % (
         OCCUPATION)
 
     gender = get_mysql_data(query)
 
-    query = "SELECT COUNT(*) as counts,domain FROM pantheon WHERE occupation='%s' GROUP BY domain ORDER BY counts DESC LIMIT 40" % (
+    query = "SELECT * FROM hpi_occupation WHERE occupation='%s' ORDER BY year ASC" % (
         OCCUPATION)
-
     domain = get_mysql_data(query)
 
-    query = "SELECT * FROM pantheon WHERE occupation='%s' ORDER BY HPI DESC LIMIT 40" % (
+    query = "SELECT * FROM pantheon WHERE occupation='%s' ORDER BY HPI DESC" % (
         OCCUPATION)
 
     people = get_mysql_data(query)
@@ -208,7 +226,7 @@ def search_occupation():
     query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
     occupations = get_mysql_data(query)
 
-    return render_template('occupation.html', era=era, domain=domain, gender=gender, country=country,people=people,
+    return render_template('occ.html', header=era, domain=domain, gender=gender, country=country,people=people,
                            list=data, occupations=occupations)
 
 

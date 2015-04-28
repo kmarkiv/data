@@ -3,17 +3,20 @@ filename = 'Pantheon.tsv'
 CROSS_WIN = "Crosses win"
 NOUGHTS_WIN = "Noughts win"
 DRAW = "Draw"
-import MySQLdb
 import hashlib
+
+import MySQLdb
+
 
 conn = MySQLdb.connect(host="localhost", user="root", passwd="worldpeace", db="pantheon")
 target = open(filename, 'r')
 line = target.readline()
 lines = []
 
-GAME_STATE_KEYS = ["name","en_curid","numlangs","country_code","country_code3","country","continent","birthyear","birthcity","gender","occupation","industry","domain","total_page_views","l_star","std_dev_page_views","page_views_english","page_views_non_english","average_views","hpi",]
+GAME_STATE_KEYS = ["name", "en_curid", "numlangs", "country_code", "country_code3", "country", "continent", "birthyear",
+                   "birthcity", "gender", "occupation", "industry", "domain", "total_page_views", "l_star",
+                   "std_dev_page_views", "page_views_english", "page_views_non_english", "average_views", "hpi", ]
 GAME_STATE_TABLE = "pantheon"
-
 
 
 def filter_key(key):
@@ -55,7 +58,7 @@ def execute_many_sql(table, keys, data):
 
 def execute_many(sql, queries):
     # print sql
-    #print queries
+    # print queries
     cur.executemany(
         sql,
         queries)
@@ -72,16 +75,15 @@ while line:
     # print line
 
     line = target.readline()
-    line = line.replace("\n","")
+    line = line.replace("\n", "")
     lines = line.split("\t")
 
     if (len(lines) == len(GAME_STATE_KEYS)):
         game_data.append(lines)
-        k+=1
+        k += 1
         if k % 1000 == 0:
             execute_many_sql(GAME_STATE_TABLE, GAME_STATE_KEYS, game_data)
             game_data = []
-
 
 execute_many_sql(GAME_STATE_TABLE, GAME_STATE_KEYS, game_data)
 game_data = []
