@@ -126,7 +126,24 @@ def hello_world():
     query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
     occupations = get_mysql_data(query)
 
-    return render_template('index.html', list=data, occupations=occupations)
+    query = "SELECT COUNT(*) as counts,gender FROM pantheon GROUP BY gender ORDER BY counts DESC LIMIT 40"
+
+    gender = get_mysql_data(query)
+
+    query = "SELECT COUNT(*) as counts,country FROM pantheon GROUP BY country ORDER BY counts DESC LIMIT 40"
+
+    country = get_mysql_data(query)
+
+
+    query = "SELECT COUNT(*) as counts,occupation FROM pantheon GROUP BY occupation ORDER BY counts DESC LIMIT 40"
+
+    occupation = get_mysql_data(query)
+
+    query = "SELECT * FROM pantheon ORDER BY HPI DESC LIMIT 100"
+
+    people = get_mysql_data(query)
+
+    return render_template('index.html', list=data, occupations=occupations,gender=gender,country=country,people=people,occupation=occupation)
 
 
 @app.route('/searchs', methods=["GET"])
@@ -139,6 +156,7 @@ def hello_search():
 
     query = "SELECT COUNT(*) as counts,domain FROM pantheon GROUP BY domain ORDER BY counts DESC LIMIT 40"
     domain = get_mysql_data(query)
+
 
     return render_template('home.html', domain=domain, gender=gender, country=country)
 
