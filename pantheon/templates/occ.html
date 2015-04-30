@@ -10,7 +10,7 @@
                         <i class="fa fa-map-marker fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">26</div>
+                        <div class="huge">{{country|length}}</div>
                         <div>Countries!</div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                         <i class="fa fa-users fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">100</div>
+                        <div class="huge">{{people|length}}</div>
                         <div>People!</div>
                     </div>
                 </div>
@@ -119,6 +119,16 @@
                 <div id="viz6" class="graphs"></div>
             </div>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-bar-chart-o fa-fw"></i> Country Distribution
+            </div>
+
+            <div class="panel-body">
+                <div id="viz7" class="graphs"></div>
+            </div>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-bar-chart-o fa-fw"></i> People
@@ -131,6 +141,7 @@
                         <th>Person</th>
                          <th>Gender</th>
                         <th>Country</th>
+                        <th>Occupation</th>
                         <th>Born</th>
                         <th>HPI</th>
 
@@ -142,6 +153,7 @@
                         <td>{{ log.name }}</td>
                         <td>{{ log.gender }}</td>
                         <td>{{ log.country }}</td>
+                        <td>{{ log.occupation }}</td>
                         <td>{{ log.birthyear }}</td>
                         <td>{{ log.hpi }}</td>
 
@@ -220,6 +232,7 @@
 {% endblock %}
 
 {% block js %}
+
 <script src="/static/sb-admin/datatables/media/js/jquery.dataTables.min.js"></script>
 <script src="/static/sb-admin/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 <script>
@@ -243,11 +256,27 @@ function draw_tree(element,data)
 d3plus.viz()
     .container("#"+element)
     .data(data)
-    .type("donut")
+    .type("tree")
     .id("name")
     .size("value")
+    .text("name")
     .draw()
 }
+
+function draw_tree_geo(element,data)
+{
+
+d3plus.viz()
+    .container("#"+element)
+    .data(data)
+    .type("geo_map")
+    .id("name")
+     .coords("/static/countries.json")
+    .size("value")
+    .text("name")
+    .draw()
+}
+
   var gender_data = [
   {% for log in gender %}
    {"value": {{ log.counts }}, "name": "{{ log.gender }}"},
@@ -263,6 +292,9 @@ d3plus.viz()
         });
         draw_pie("viz",gender_data);
         draw_tree("viz2",country_data);
+        $('rect.d3plus_data').on("click", function() {
+console.log("Hello")
+});
     });
 
 
@@ -308,7 +340,7 @@ var h_data = [
 var h_c_data = [
   {% for log in domain %}
   {% if "all" != log.country %}
-   {"hpi_percent": {{ log.hpi_percent*100 }}, "name": "{{ log.country }}","year":{{log.year}}},
+   {"hpi_percent": {{ log.hpi_percent*100 }},"hpi_cum": {{ log.hpi_cum }}, "name": "{{ log.country }}","year":{{log.year}}},
     {% endif %}
    {% endfor %}
 
@@ -326,6 +358,16 @@ var h_c_data = [
     .draw()
 
 
+ // instantiate d3plus
+  var visualization = d3plus.viz()
+    .container("#viz7")  // container DIV to hold the visualization
+    .data(h_c_data)  // data to use with the visualization
+    .type("line")       // visualization type
+    .id("name")         // key for which our data is unique on
+    .text("name")       // key to use for display text
+    .y("hpi_cum")         // key to use for y-axis
+    .x("year")          // key to use for x-axis
+    .draw()
 
 
 

@@ -25,7 +25,7 @@ dbc = cur
 dbc.execute('SET NAMES utf8;')
 dbc.execute('SET CHARACTER SET utf8;')
 dbc.execute('SET character_set_connection=utf8;')
-TABLE = "hpi_occupation"
+TABLE = "hpi_country"
 keys = ["occupation", "hpi_avg", "hpi_sum", "hpi_percent", "year", "country", "continent"]
 
 
@@ -55,7 +55,7 @@ def execute_many(sql, queries):
     print id
 
 
-sql = "SELECT * FROM pantheon GROUP BY occupation"
+sql = "SELECT * FROM pantheon GROUP BY country"
 data = get_mysql_data(sql)
 game_data = []
 k = 0
@@ -87,15 +87,19 @@ def add_sum_data(row):
 for row in data:
     for i in range(-2000, 2000, 50):
         print i, i + 100
+        if "'" in row['country']:
+            row['country'] = row['country'].replace("'", "")
         print row['occupation']
-        sql = "SELECT occupation,%s as year,sum(hpi) as hpi_sum,avg(hpi) as hpi_avg,100 as hpi_percent,'all'as country,'all'as continent FROM pantheon WHERE birthyear>%s AND birthyear<=%s AND occupation='%s'" % (
-            i + 50, i, i + 50, row['occupation'])
+        sql = "SELECT country,%s as year,sum(hpi) as hpi_sum,avg(hpi) as hpi_avg,100 as hpi_percent,'all'as occupation,'all'as continent FROM pantheon WHERE birthyear>%s AND birthyear<=%s AND country=\'%s\'" % (
+            i + 50, i, i + 50, row['country'])
 
+        print sql
         c_data = get_mysql_data(sql)
         if c_data[0]['hpi_sum'] is not None:
             add_hcpi_data(c_data)
-            sql = "SELECT continent,occupation,%s as year,sum(hpi) as hpi_sum,avg(hpi) as hpi_avg,sum(hpi)/%s as hpi_percent,country FROM pantheon WHERE birthyear>%s AND birthyear<=%s AND occupation='%s' GROUP BY country" % (
-                i + 50, c_data[0]['hpi_sum'], i, i + 50, row['occupation'])
+            sql = "SELECT continent,occupation,%s as year,sum(hpi) as hpi_sum,avg(hpi) as hpi_avg,sum(hpi)/%s as hpi_percent,country FROM pantheon WHERE birthyear>%s AND birthyear<=%s AND country=\'%s\' GROUP BY occupation" % (
+                i + 50, c_data[0]['hpi_sum'], i, i + 50, row['country'])
+            print sql
             o_data = get_mysql_data(sql)
             add_hcpi_data(o_data)
             print o_data

@@ -2,7 +2,6 @@ from optparse import OptionParser
 from cStringIO import StringIO
 
 from iniparse import INIConfig
-
 from flask import Flask, g, render_template, request, jsonify
 import MySQLdb
 import MySQLdb.cursors
@@ -90,22 +89,12 @@ def admin():
 
 @app.route('/team')
 def admin_team():
-    query = "SELECT *,'durationEvent' as 'true' FROM wiki_era"
-    data = get_mysql_data(query)  # print response
-
-    query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
-    occupations = get_mysql_data(query)
-    return render_template('team.html', list=data, occupations=occupations)
+    return render_template('team.html', lists=get_lists())
 
 
 @app.route('/ml')
 def admin_ml():
-    query = "SELECT *,'durationEvent' as 'true' FROM wiki_era"
-    data = get_mysql_data(query)  # print response
-
-    query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
-    occupations = get_mysql_data(query)
-    return render_template('ml.html', list=data, occupations=occupations)
+    return render_template('ml.html', lists=get_lists())
 
 
 @app.route('/occ')
@@ -128,14 +117,19 @@ def api_timeline_test():
     return jsonify(data)
 
 
-@app.route('/')
-def hello_world():
-    query = "SELECT *,'durationEvent' as 'true' FROM wiki_era"
+def get_lists():
+    query = "SELECT * FROM pantheon GROUP BY country ORDER BY RAND()"
+    country_data = get_mysql_data(query)
+    query = "SELECT *,'durationEvent' as 'true' FROM wiki_era WHERE country!='NA' ORDER BY RAND()"
     data = get_mysql_data(query)  # print response
 
-    query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
+    query = "SELECT id,occupation FROM pantheon GROUP BY occupation ORDER BY RAND()"
     occupations = get_mysql_data(query)
+    return {"country": country_data, "era": data, "occupations": occupations}
 
+
+@app.route('/')
+def hello_world():
     query = "SELECT COUNT(*) as counts,gender FROM pantheon GROUP BY gender ORDER BY counts DESC LIMIT 40"
 
     gender = get_mysql_data(query)
@@ -143,7 +137,6 @@ def hello_world():
     query = "SELECT COUNT(*) as counts,country FROM pantheon GROUP BY country ORDER BY counts DESC LIMIT 40"
 
     country = get_mysql_data(query)
-
 
     query = "SELECT COUNT(*) as counts,occupation FROM pantheon GROUP BY occupation ORDER BY counts DESC LIMIT 40"
 
@@ -153,7 +146,8 @@ def hello_world():
 
     people = get_mysql_data(query)
 
-    return render_template('index.html', list=data, occupations=occupations,gender=gender,country=country,people=people,occupation=occupation)
+    return render_template('index.html', lists=get_lists(), gender=gender, country=country,
+                           people=people, occupation=occupation)
 
 
 @app.route('/searchs', methods=["GET"])
@@ -167,30 +161,43 @@ def hello_search():
     query = "SELECT COUNT(*) as counts,domain FROM pantheon GROUP BY domain ORDER BY counts DESC LIMIT 40"
     domain = get_mysql_data(query)
 
-
     return render_template('home.html', domain=domain, gender=gender, country=country)
 
 
 def search_era_stuff(START, END, CONTINENT, COUNTRY='%'):
-    query = "SELECT COUNT(*) as counts,country FROM pantheon WHERE birthyear>'%s' AND birthyear<'%s' AND continent='%s' AND country='%s' GROUP BY country ORDER BY counts DESC LIMIT 40" % (
-        START, END, CONTINENT, COUNTRY)
+    if "Europe" in COUNTRY:
+        COUNTRY = "%"
+
+    COUNTRY_SQL = ""
+    if COUNTRY != "%":
+        COUNTRY_SQL = "AND country='%s'" % COUNTRY
+
+    if COUNTRY == "Middle East":
+        COUNTRY_SQL = "AND country IN('Iran','Iraq','Israel','Turkey','Saudi Arabia','Yemen','Qatar','Oman','Egypt')"
+    query = "SELECT COUNT(*) as counts,country FROM pantheon WHERE birthyear>%s AND birthyear<%s AND continent='%s' %s GROUP BY country ORDER BY counts DESC LIMIT 40" % (
+        START, END, CONTINENT, COUNTRY_SQL)
 
     country = get_mysql_data(query)
 
-    query = "SELECT COUNT(*) as counts,gender FROM pantheon WHERE birthyear>'%s' AND birthyear<%s AND continent='%s' AND country='%s' GROUP BY gender ORDER BY counts DESC LIMIT 40" % (
-        START, END, CONTINENT, COUNTRY)
+    query = "SELECT COUNT(*) as counts,gender FROM pantheon WHERE birthyear>%s AND birthyear<%s AND continent='%s' %s GROUP BY gender ORDER BY counts DESC LIMIT 40" % (
+        START, END, CONTINENT, COUNTRY_SQL)
 
     gender = get_mysql_data(query)
 
-    query = "SELECT *,SUM(hpi_percent) FROM hpi_occupation WHERE year>='%s' AND year<='%s' AND country='all' ORDER BY year ASC" % (START, END)
+    query = "SELECT *,SUM(hpi_sum) as hpi_sum_cum FROM hpi_occupation WHERE year>=%s AND year<=%s AND continent='%s' %s GROUP BY year ASC" % (
+        START, END, CONTINENT, COUNTRY_SQL)
+
+    print query
     domain = get_mysql_data(query)
 
-    query = "SELECT COUNT(*) as counts,occupation FROM pantheon WHERE birthyear>'%s' AND birthyear<%s AND continent='%s' AND country='%s' GROUP BY occupation ORDER BY counts DESC LIMIT 40" % (
-        START, END, CONTINENT, COUNTRY)
+    query = "SELECT COUNT(*) as counts,occupation FROM pantheon WHERE birthyear>%s AND birthyear<%s AND continent='%s' %s GROUP BY occupation ORDER BY counts DESC LIMIT 40" % (
+        START, END, CONTINENT, COUNTRY_SQL)
     occupation = get_mysql_data(query)
 
-    query = "SELECT * FROM pantheon WHERE birthyear>'%s' AND birthyear<'%s' AND  continent='%s' AND country='%s' ORDER BY HPI DESC" % (
-        START, END, CONTINENT, COUNTRY)
+    query = "SELECT * FROM pantheon WHERE birthyear>%s AND birthyear<%s AND  continent='%s' %s ORDER BY HPI DESC" % (
+        START, END, CONTINENT, COUNTRY_SQL)
+
+    print query
 
     people = get_mysql_data(query)
 
@@ -223,11 +230,35 @@ def search_occupation_stuff(OCCUPATION):
     return country, gender, domain, people
 
 
+def search_country_stuff(country):
+    query = "SELECT COUNT(*) as counts,occupation FROM pantheon WHERE country='%s' GROUP BY occupation ORDER BY counts DESC LIMIT 40" % (
+        country)
+
+    occupation = get_mysql_data(query)
+
+    query = "SELECT COUNT(*) as counts,gender,avg(HPI) as avg_hpi FROM pantheon WHERE country='%s' GROUP BY gender ORDER BY counts DESC LIMIT 40" % (
+        country)
+
+    gender = get_mysql_data(query)
+
+    query = "SELECT * FROM hpi_country WHERE country='%s' AND year>0 ORDER BY year ASC" % (
+        country)
+    domain = get_mysql_data(query)
+
+    query = "SELECT * FROM pantheon WHERE country='%s'  ORDER BY HPI DESC LIMIT 400" % (
+        country)
+
+    people = get_mysql_data(query)
+
+    data = {'gender': gender, 'occupation': occupation, 'people': people, 'domain': domain}
+    return data
+
+
 @app.route('/era', methods=["POST"])
 def search_era():
     era = request.form.get("era", 1)
     print era
-    query = "SELECT* FROM wiki_era WHERE id='%s'" % era
+    query = "SELECT * FROM wiki_era WHERE id='%s'" % era
     country = get_mysql_data(query)[0]
     # print country
     start = country['start']
@@ -244,14 +275,16 @@ def search_era():
 
     country, gender, domain, occupation, people = search_era_stuff(start, end, continent, place)
 
-    query = "SELECT id,wiki_key,title,start,end,country,continent FROM wiki_era"
-    data = get_mysql_data(query)  # print response
-
-    query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
-    occupations = get_mysql_data(query)
-
     return render_template('era.html', era=era, domain=domain, gender=gender, country=country,
-                           occupation=occupation, list=data, occupations=occupations, people=people)
+                           occupation=occupation, lists=get_lists(), people=people)
+
+
+@app.route('/country', methods=["POST"])
+def search_country():
+    country = request.form.get("country", "India")
+    country_data = search_country_stuff(country)
+
+    return render_template('country.html', data=country_data, lists=get_lists(), header=country)
 
 
 @app.route('/occupation', methods=["POST"])
@@ -259,15 +292,8 @@ def search_occupation():
     era = request.form.get("occupation", 1)
 
     country, gender, domain, people = search_occupation_stuff(era)
-
-    query = "SELECT id,wiki_key,title,start,end,country,continent FROM wiki_era"
-    data = get_mysql_data(query)  # print response
-
-    query = "SELECT id,occupation FROM pantheon GROUP BY occupation"
-    occupations = get_mysql_data(query)
-
     return render_template('occ.html', header=era, domain=domain, gender=gender, country=country, people=people,
-                           list=data, occupations=occupations)
+                           lists=get_lists())
 
 
 @app.route('/search', methods=["GET"])

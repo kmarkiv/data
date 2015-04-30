@@ -113,10 +113,9 @@
 
                                 <div class="form-group search-form">
                                     <select class="form-control chosen-select" name="occupation">
-                                        {% for occupation in occupations %}
-                                        {{log}}
-                                        <option value="{{occupation.occupation}}"
-                                                >{{occupation.occupation}}
+                                        {% for log in lists.occupations %}
+                                        <option value="{{log.occupation}}"
+                                                >{{log.occupation}}
                                         </option>
                                         {% endfor %}
 
@@ -150,10 +149,45 @@
 
                                 <select class="form-control chosen-select" name="era"
                                         data-placeholder="Choose an occupation">
-                                    {% for log in list %}
-                                    {{log}}
+                                    {% for log in lists.era %}
                                     <option value="{{log.id}}" id="{{log.id}}" data-start="{{log.start}}"
                                             data-stop="{{log.start}}">{{log.title}} - {{log.country}}
+                                    </option>
+                                    {% endfor %}
+
+
+                                </select>
+
+
+                            </div>
+
+
+                            <button type="submit" class="btn btn-default pull=right">
+                                <i class="fa fa-search"></i>
+                            </button>
+
+
+                        </form>
+
+
+                        <!-- /input-group -->
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-table fa-fw"></i> COUNTRY</a>
+                    </li>
+                    <li class="sidebar-search">
+
+
+                        <form role="form" method="post" action="/country">
+
+                            <div class="form-group search-form">
+
+                                <select class="form-control chosen-select" name="country"
+                                        data-placeholder="Choose an occupation">
+                                    {% for log in lists.country %}
+                                    <option value="{{log.country}}" id="{{log.id}}" data-start="{{log.start}}"
+                                            data-stop="{{log.start}}">{{log.country}}
                                     </option>
                                     {% endfor %}
 
@@ -235,6 +269,7 @@
     <script src="/static/sbadmin/js/sb-admin-2.js"></script>
     <script src="http://www.d3plus.org/js/d3.js"></script>
     <script src="http://www.d3plus.org/js/d3plus.js"></script>
+    <script src="http://www.d3plus.org/js/topojson.js"></script>
     {% block js %}{% endblock %}
     <script>
 $( document ).ready(function() {
