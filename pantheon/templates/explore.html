@@ -1,0 +1,68 @@
+{% extends "admin.html" %}
+{% block body %}
+
+<div class="row" id="team">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+
+            <div class="panel-body">
+
+                <h1>Most influential countries</h1>
+                <table class="table table-striped table-condensed" id="people">
+                    <thead>
+                    <tr>
+
+                        <th>Country</th>
+                        <th>Occupation</th>
+                        <th>Year</th>
+
+                        <th>Popularity</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for log in country_table %}
+                    <tr>
+
+                        <td><a href="{{url_for('search_country', country=log.country)}}">{{ log.country }}</a></td>
+                        <td><a href="{{url_for('search_occupation', occupation=log.occupation)}}">{{ log.occupation
+                            }}</a></td>
+                        <td>{{ log.year }}</td>
+                        <td>{{ log.hpi_sum }}</td>
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+
+
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+{% endblock %}
+{% block js %}
+<script src="/static/sb-admin/datatables/media/js/jquery.dataTables.min.js"></script>
+<script src="/static/sb-admin/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+<script>
+
+
+  $(document).ready(function() {
+       var oTable=  $('#people').DataTable({
+                "aaSorting": [[3,'desc']]
+
+        });
+
+
+
+
+    });
+
+
+
+
+</script>
+{% endblock %}

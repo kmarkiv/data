@@ -41,16 +41,19 @@
                         <th>Gender</th>
                         <th>Occupation</th>
                         <th>Born</th>
-                        <th>HPI</th>
+                        <th>Popularity</th>
 
                     </tr>
                     </thead>
                     <tbody>
                     {% for log in data.people %}
                     <tr>
-                        <td>{{ log.name }}</td>
+                        <td><a href="http://simple.m.wikipedia.org/wiki/{{log.name|wiki_url}}" data-toggle="lightbox">{{
+                            log.name }}</a>
+                        </td>
                         <td>{{ log.gender }}</td>
-                        <td>{{ log.occupation }}</td>
+                        <td><a href="{{url_for('search_occupation', occupation=log.occupation)}}">{{ log.occupation
+                            }}</a></td>
                         <td>{{ log.birthyear }}</td>
                         <td>{{ log.hpi }}</td>
 
@@ -169,7 +172,7 @@ d3plus.viz()
 
     $(document).ready(function() {
         $('#people').DataTable({
-                responsive: true
+                 "aaSorting": [[4,'desc']]
         });
         draw_pie("viz",gender_data);
         draw_tree("viz2",country_data);
@@ -226,6 +229,8 @@ var h_data = [
     .y("hpi_cum")         // key to use for y-axis
     .x("year")          // key to use for x-axis
     .draw()             // finally, draw the visualization!
+
+
 
 
 

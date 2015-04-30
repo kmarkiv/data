@@ -26,6 +26,7 @@
 
     <!-- Custom Fonts -->
     <link href="/static/sb-admin/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/ekko-lightbox.min.css" rel="stylesheet" type="text/css">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -100,8 +101,8 @@
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
 
-                     <li>
-                        <a href="#"><i class="fa fa-table fa-fw"></i> OCCUPATION</a>
+                    <li>
+                        <a href="#"><i class="fa fa-briefcase fa-fw"></i> OCCUPATION</a>
                     </li>
 
                     <li class="sidebar-search">
@@ -136,11 +137,10 @@
                         <!-- /input-group -->
                     </li>
 
-                     <li>
-                        <a href="#"><i class="fa fa-table fa-fw"></i> AGE</a>
+                    <li>
+                        <a href="#"><i class="fa fa-bank fa-fw"></i> AGE</a>
                     </li>
                     <li class="sidebar-search">
-
 
 
                         <form role="form" method="post" action="/era">
@@ -174,7 +174,7 @@
                     </li>
 
                     <li>
-                        <a href="#"><i class="fa fa-table fa-fw"></i> COUNTRY</a>
+                        <a href="#"><i class="fa fa-flag fa-fw"></i> COUNTRY</a>
                     </li>
                     <li class="sidebar-search">
 
@@ -210,10 +210,8 @@
                     </li>
 
 
-
-
                     <li>
-                        <a href="#"><i class="fa fa-sitemap fa-fw"></i> Explore </a>
+                        <a href="/explore"><i class="fa fa-sitemap fa-fw"></i> Explore </a>
                         <!-- /.nav-second-level -->
                     </li>
                     <li>
@@ -267,6 +265,7 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="/static/sbadmin/js/sb-admin-2.js"></script>
+    <script src="/static/js/ekko-lightbox.min.js"></script>
     <script src="http://www.d3plus.org/js/d3.js"></script>
     <script src="http://www.d3plus.org/js/d3plus.js"></script>
     <script src="http://www.d3plus.org/js/topojson.js"></script>
@@ -274,7 +273,17 @@
     <script>
 $( document ).ready(function() {
         $(".chosen-select").chosen({width: "95%"});
+        // delegate calls to data-toggle="lightbox"
+				$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+					event.preventDefault();
+					return $(this).ekkoLightbox({
+						always_show_close: true
+					});
+				});
 });
+
+
+
 
 
 

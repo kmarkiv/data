@@ -1,13 +1,13 @@
 {% extends "admin.html" %}
 {% block body %}
 <div class="row">
-              <h2>{{era.title}}
-                <small><strong>{{era.country}}</strong> ({{era.start}} - {{era.end}})</small>
-            </h2>
+    <h2>{{era.title}}
+        <small><strong>{{era.country}}</strong> ({{era.start}} - {{era.end}})</small>
+    </h2>
 
     <p style="display:none"><strong></strong>
 
-                {{era.abstract}}</p>
+        {{era.abstract}}</p>
 
     <div class="col-lg-8">
         <div class="panel panel-default">
@@ -31,19 +31,24 @@
                     <thead>
                     <tr>
                         <th>Person</th>
-                         <th>Gender</th>
+                        <th>Gender</th>
                         <th>Country</th>
+                        <th>Occupation</th>
                         <th>Born</th>
-                        <th>HPI</th>
+                        <th>Popularity</th>
 
                     </tr>
                     </thead>
                     <tbody>
                     {% for log in people %}
                     <tr>
-                        <td>{{ log.name }}</td>
+                        <td><a href="http://simple.m.wikipedia.org/wiki/{{log.name|wiki_url}}" data-toggle="lightbox">{{
+                            log.name }}</a>
+                        </td>
                         <td>{{ log.gender }}</td>
-                        <td>{{ log.country }}</td>
+                        <td><a href="{{url_for('search_country', country=log.country)}}">{{ log.country }}</a></td>
+                        <td><a href="{{url_for('search_occupation', occupation=log.occupation)}}">{{ log.occupation
+                            }}</a></td>
                         <td>{{ log.birthyear }}</td>
                         <td>{{ log.hpi }}</td>
 
@@ -119,13 +124,7 @@
 </div>
 
 
-
-
-
-
-
 {% endblock %}
-
 
 
 {% block js %}
@@ -168,7 +167,7 @@ d3plus.viz()
 
     $(document).ready(function() {
         $('#people').DataTable({
-                responsive: true
+                "aaSorting": [[3,'desc']]
         });
         draw_pie("viz",gender_data);
         draw_tree("viz2",country_data);
@@ -211,6 +210,8 @@ var h_data = [
     .y("hpi_sum")         // key to use for y-axis
     .x("year")          // key to use for x-axis
     .draw()             // finally, draw the visualization!
+
+
 
 
 

@@ -6,6 +6,12 @@ from flask import Flask, g, render_template, request, jsonify
 import MySQLdb
 import MySQLdb.cursors
 
+def wiki_url(url):
+
+    return url.replace(" ","_")
+
+# ...
+
 
 API_KEY = "AIzaSyCfRmwMKY8NVG1YSP_bJzA44orhsZOtjmY"
 TABLE_ID = "1R0Pu0hjxXGWQC_eUetkV_1pZvN0hVubQaBY_RDtp"
@@ -51,6 +57,7 @@ def get_data(env="aws"):
 
 app = Flask(__name__)
 app.config['DATA'] = get_data(env)
+app.jinja_env.filters['wiki_url'] = wiki_url
 app.debug = True
 
 
@@ -254,10 +261,12 @@ def search_country_stuff(country):
     return data
 
 
-@app.route('/era', methods=["POST"])
+@app.route('/era', methods=["GET", "POST"])
 def search_era():
-    era = request.form.get("era", 1)
-    print era
+    if request.method == 'POST':
+        era = request.form.get("era", 1)
+    else:
+        era = request.args.get("era", 1)
     query = "SELECT * FROM wiki_era WHERE id='%s'" % era
     country = get_mysql_data(query)[0]
     # print country
@@ -279,18 +288,32 @@ def search_era():
                            occupation=occupation, lists=get_lists(), people=people)
 
 
-@app.route('/country', methods=["POST"])
+@app.route('/country', methods=["GET", "POST"])
 def search_country():
-    country = request.form.get("country", "India")
+    if request.method == 'POST':
+        country = request.form.get("country", "India")
+    else:
+        country = request.args.get("country", "India")
+
     country_data = search_country_stuff(country)
 
     return render_template('country.html', data=country_data, lists=get_lists(), header=country)
 
 
-@app.route('/occupation', methods=["POST"])
-def search_occupation():
-    era = request.form.get("occupation", 1)
+@app.route('/explore', methods=["GET"])
+def search_explore():
+    sql = "SELECT * FROM hpi_country WHERE occupation!='all' ORDER BY hpi_sum DESC LIMIT 400"
+    country_table = get_mysql_data(sql)
 
+    return render_template('explore.html', lists=get_lists(), country_table=country_table)
+
+
+@app.route('/occupation', methods=["POST", "GET"])
+def search_occupation():
+    if request.method == 'POST':
+        era = request.form.get("occupation", "ACTOR")
+    else:
+        era = request.args.get("occupation", "ACTOR")
     country, gender, domain, people = search_occupation_stuff(era)
     return render_template('occ.html', header=era, domain=domain, gender=gender, country=country, people=people,
                            lists=get_lists())
